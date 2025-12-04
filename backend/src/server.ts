@@ -1,7 +1,6 @@
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
-import { corsOptions } from "./config/corsConfig.js";
 
 // express instance
 const app = express();
@@ -9,7 +8,18 @@ const app = express();
 // load dotenv files
 dotenv.config();
 
-// handle cors
-app.use(cors(corsOptions))
+// Middleware to Handle CORS
+app.use(
+  cors({
+    origin: process.env.CLIENT_URL || "*",
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  })
+);
 
+// api routes
+// app.use("/api/v1/auth", authRoutes)
 
+// start the server
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => console.log(`Server is running on PORT ${PORT}`));
