@@ -1,54 +1,246 @@
-## Steps to create the attendance app
+# QR-Based Attendance App
 
-### how the app flow should look like
+A modern, full-stack attendance tracking system for classrooms using QR code technology. Teachers can create attendance sessions with unique QR codes, and students can mark their attendance by scanning them.
 
-- user opens the web app
-- should be an pwa with mobile first design
-- sees two options on the home page Register and Login
-- Register form has 4 fields name, department, email, password, confirm password, role dropdown teacher or student
-- once registration is done the user gets redirected to the dashboard page
-- discuss the dashboard design here for teachers and for students
-- students have a button on the top right to mark attendance
-    - when student clicks it opens the camera to scan qr
-    - when scanning done a pop up comes of attendance successful
-- teachers have a button on the top right to take attendance
-    - when clicked by teacher a form pops up to enter class name, semester and course type (dropdown of [Major, Minor, AEC, SEC, MDC, CVA])
-    - when teacher submits the form a class attendance session is created in postgres which has sessionId, teacherId, className, semester, courseType, startedAt: new Date(), isActive: true
-    - then a qr code is generated that contains sessionId and teacherId
-    - then once the attendance is complete the teacher should click attendance complete button and the session ends
+## Features
 
-### Core features
-- This would be react + vite for frontend in the frontend folder and a node.js backend in the backend folder
-- Authentication would be manual email or phone and password and email or phone verification while registering only 
-- Has two main routes user and admin
-- students are users, teachers are admin
-- When the student logs in he should see a screen with a button to mark his attendance
-- When he clicks the button a camera should open
-- He would scan the QR code, Confirm button pops up, User presses it, and that would mark his attendance
-- Then a new QR code gets generated for the other student to scan and mark his attendance
-- The QR Code generation process can be started by admins only
-- When a Admin logs in he should see a Button to take attendance that would start the QR code generation process
+### For Teachers
+- 📝 Create attendance sessions with custom titles and subjects
+- 🔲 Auto-generated QR codes for each session
+- ⏱️ Set session duration and expiration
+- 📊 Real-time attendance tracking
+- 👥 View detailed attendance lists
+- 🔄 Activate/deactivate sessions
+- 🗑️ Delete sessions
 
-### Features I want: 
+### For Students
+- 📷 Scan QR codes to mark attendance
+- 📈 View attendance history
+- 📊 Subject-wise attendance statistics
+- ✅ Instant confirmation of attendance
 
-- QR code based attendance
-- should i make the main qr code appear on each person's phone or only on teachers phone and people one by one scans it
-- decided the qr should appear on only teachers phone and would generate a new code everytime someone scans the qr and marks attendance
-- the qr code needs to change once someone marks their attendance
+## Tech Stack
 
-### More clearly
+### Backend
+- **Node.js** - Runtime environment
+- **Express.js** - Web framework
+- **MongoDB** - Database
+- **Mongoose** - ODM
+- **JWT** - Authentication
+- **bcryptjs** - Password hashing
+- **qrcode** - QR code generation
 
-- backend and frontend separate files
-- manual login using bcrypt jsonwebtoken
-- Admin Page needed
-    - Dashboard Page
-    - Dropdown to select the year (1st, 2nd, 3rd, 4th)
-    - Dashboard page for each year student stats
-- Student Page needed
+### Frontend
+- **React** - UI library
+- **Vite** - Build tool
+- **React Router** - Routing
+- **Axios** - HTTP client
+- **html5-qrcode** - QR scanner
+- **Vanilla CSS** - Styling
 
-### Backend APIs I need to write
+## Project Structure
 
-- Authentication is sure I am writing
-    - register
-    - login
+```
+attendance-app/
+├── backend/
+│   ├── config/
+│   │   └── db.js
+│   ├── controllers/
+│   │   ├── authController.js
+│   │   ├── sessionController.js
+│   │   └── attendanceController.js
+│   ├── middleware/
+│   │   └── authMiddleware.js
+│   ├── models/
+│   │   ├── User.js
+│   │   ├── Session.js
+│   │   └── Attendance.js
+│   ├── routes/
+│   │   ├── authRoutes.js
+│   │   ├── sessionRoutes.js
+│   │   └── attendanceRoutes.js
+│   ├── .env
+│   ├── server.js
+│   └── package.json
+│
+└── frontend/
+    ├── src/
+    │   ├── components/
+    │   │   └── ProtectedRoute.jsx
+    │   ├── pages/
+    │   │   ├── Login.jsx
+    │   │   ├── Register.jsx
+    │   │   ├── TeacherDashboard.jsx
+    │   │   ├── CreateSession.jsx
+    │   │   ├── SessionDetails.jsx
+    │   │   ├── StudentDashboard.jsx
+    │   │   └── ScanQR.jsx
+    │   ├── utils/
+    │   │   ├── api.js
+    │   │   └── auth.js
+    │   ├── App.jsx
+    │   ├── main.jsx
+    │   └── index.css
+    ├── .env
+    ├── index.html
+    ├── vite.config.js
+    └── package.json
+```
 
+## Installation & Setup
+
+### Prerequisites
+- Node.js (v14 or higher)
+- MongoDB (local or Atlas)
+- npm or yarn
+
+### Backend Setup
+
+1. Navigate to the backend directory:
+```bash
+cd backend
+```
+
+2. Install dependencies:
+```bash
+npm install
+```
+
+3. Configure environment variables:
+   - Copy `.env.example` to `.env`
+   - Update `MONGODB_URI` with your MongoDB connection string
+   - Update `JWT_SECRET` with a secure secret key
+
+4. Start the server:
+```bash
+# Development mode with auto-reload
+npm run dev
+
+# Production mode
+npm start
+```
+
+The backend will run on `http://localhost:5000`
+
+### Frontend Setup
+
+1. Navigate to the frontend directory:
+```bash
+cd frontend
+```
+
+2. Install dependencies:
+```bash
+npm install
+```
+
+3. Configure environment variables:
+   - The `.env` file is already configured for local development
+   - Update `VITE_API_URL` if your backend runs on a different port
+
+4. Start the development server:
+```bash
+npm run dev
+```
+
+The frontend will run on `http://localhost:5173`
+
+## Usage
+
+### For Teachers
+
+1. **Register/Login**
+   - Create an account with role "Teacher"
+   - Login with your credentials
+
+2. **Create Session**
+   - Click "Create New Session"
+   - Enter session title, subject, and duration
+   - A unique QR code will be generated
+
+3. **Share QR Code**
+   - Display the QR code to students
+   - Students can scan it to mark attendance
+
+4. **Monitor Attendance**
+   - View real-time attendance list
+   - See who has marked attendance
+   - Export or manage records
+
+### For Students
+
+1. **Register/Login**
+   - Create an account with role "Student"
+   - Login with your credentials
+
+2. **Mark Attendance**
+   - Click "Scan QR Code"
+   - Allow camera access
+   - Scan the teacher's QR code
+   - Get instant confirmation
+
+3. **View History**
+   - Check your attendance records
+   - View subject-wise statistics
+   - Track your attendance percentage
+
+## API Endpoints
+
+### Authentication
+- `POST /api/auth/register` - Register new user
+- `POST /api/auth/login` - Login user
+- `GET /api/auth/me` - Get current user
+
+### Sessions (Teacher)
+- `POST /api/sessions` - Create new session
+- `GET /api/sessions` - Get all teacher's sessions
+- `GET /api/sessions/:id` - Get session details
+- `DELETE /api/sessions/:id` - Delete session
+- `PUT /api/sessions/:id/toggle` - Toggle session status
+
+### Attendance
+- `POST /api/attendance/mark` - Mark attendance (Student)
+- `GET /api/attendance/session/:sessionId` - Get session attendance (Teacher)
+- `GET /api/attendance/student` - Get student's attendance history
+- `GET /api/attendance/student/stats` - Get student statistics
+
+## Security Features
+
+- JWT-based authentication
+- Password hashing with bcryptjs
+- Role-based access control
+- Protected routes
+- Session expiration
+- Duplicate attendance prevention
+
+## Design Features
+
+- Modern dark theme
+- Responsive design
+- Smooth animations
+- Glassmorphism effects
+- Real-time updates
+- Loading states
+- Error handling
+- Empty states
+
+## Future Enhancements
+
+- [ ] Export attendance to CSV/Excel
+- [ ] Email notifications
+- [ ] Geolocation verification
+- [ ] Multiple QR codes per session
+- [ ] Attendance reports and analytics
+- [ ] Mobile app (React Native)
+- [ ] Push notifications
+- [ ] Bulk session creation
+- [ ] Attendance percentage calculator
+- [ ] Admin dashboard
+
+## License
+
+MIT
+
+## Author
+
+Created with ❤️ for classroom attendance management
